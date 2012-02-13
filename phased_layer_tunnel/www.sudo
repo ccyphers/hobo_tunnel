@@ -1,0 +1,3 @@
+www-data        ALL = NOPASSWD: /phased_layer_tunnel/bin/useradd,/phased_layer_tunnel/bin/update_cert.sh,/phased_layer_tunnel/bin/rm_certs.rb
+
+

@@ -1,0 +1,14 @@
+# A sample Gemfile
+source "http://rubygems.org"
+gem 'sinatra'
+gem 'rack'
+gem 'rack-session-stack'
+gem 'sinatra_warden'
+gem 'activerecord'
+gem 'unicorn'
+gem 'rails'
+gem 'mysql'
+gem 'beanstalk-client'
+#gem 'ruby-debug19'
+gem 'platform_helpers'
+gem 'wait_for'
