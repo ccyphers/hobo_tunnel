@@ -1,3 +1,6 @@
+require 'rubygems'
+require 'bundler/setup'
+require 'rake'
 require 'platform_helpers'
 BASE = File.expand_path(File.dirname(__FILE__))
 Dir.entries(BASE + '/lib').each { |i| require "#{BASE}/lib/#{i}" if i =~ /\.rb$/ }
@@ -13,6 +16,7 @@ require 'sinatra'
 require BASE + '/session_mgt'
 require BASE + '/pm_vpn'
 #require 'rack/flash'
+require 'unicorn'
 DEBUG=false
 
 use Rack::Session::Cookie, :secret => 'whatever'
