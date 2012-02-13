@@ -1,10 +1,11 @@
 == DESCRIPTION:
 
-Hobo Tunnel is set out to provide a secue and easy menas to secure up infrastrucures via 
-ssh tunnel management.  Why consider such a project, where there are numerous ssh tunnel managers out there?  First and foremost, all aspects of the project run within a chroot envrionment with ease.  Secondly, a pure ruby client authenticates over http to receive a private key 
+Hobo Tunnel is set out to provide a secue and easy menas to secure up infrastrucures via
+ssh tunnel management.  Why consider such a project, when there are numerous ssh tunnel managers out there?  First and foremost, all aspects of the project run within a chroot envrionment with ease.  Secondly, a pure ruby client authenticates over http to receive a private key 
 which is used to create the ssh connection and the public key at the server side is deleted, so that other user's can't use the private key to ssh in.  As of now I haven't added the configuration for nginx, but the http aspects will be secured via ssl in the near future.
 
 In the near future additional web interface controls will be added so that from a centralized console you can start, and stop ssh tunnels running over as many clients installed.
+
 
 == REQUIREMENTS:
 
