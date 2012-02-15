@@ -8,46 +8,45 @@ module Sinatra
     def self.registered(app)
       app.helpers Cert::Helpers
 
+      app.get '/tunnel_pairs' do
+        require_user
+        pairs=[]
+        begin
+          current_user.limits.each { |limit|
+            pairs << {:tunnel_type => limit.ssh_type, :sport => limit.ssh_port, :dport => limit.ssh_dport}
+          }
+        rescue => e
+          pairs = []
+        end
+        pairs.to_json
+      end
+
       app.get '/cert' do
         require_user
         ssh_type = { 'local' => 0, 'remote' => 1}
         res = "<STATUS>deny</STATUS><CERT>-1</CERT>"
         params['conn_type'] ||= 'local'
         params['conn_port'] ||= '5900'
-        if params['conn_type'] != '' && params['conn_port'] != ''
+        tmp_file = "/tmp/#{current_user.email}_#{Token.provide}"
+        if current_user.limits.length > 0
           begin
-            limit = Limit.find(:first, :conditions => ["user_id = ? and ssh_type = ? and ssh_port = ?", 
-                               current_user.id, ssh_type[params['conn_type']], params['conn_port'].to_i])
+            `ssh-keygen -q -t rsa -b 2048 -N '' -f #{tmp_file}`
           rescue => e
-            limit = nil
+            logger.warn("keygen error: #{e.inspect}")
           end
-
-          if limit
-            tmp_file = "/tmp/#{current_user.email}_#{Token.provide}"
-            begin
-              `ssh-keygen -q -t rsa -b 2048 -N '' -f #{tmp_file}`
-            rescue => e
-              logger.warn("keygen error: #{e.inspect}")
-            end
-            if params.has_key?(:windows) then
-              `puttygen #{tmp_file} -o #{tmp_file}.ppk`
-              win_private = File.read("#{tmp_file}.ppk")
-              res = "<STATUS>allow</STATUS><CERT>#{win_private}</CERT>"
-            else
-              #pub = File.read("#{tmp_file}.pub")
-              pri = File.read(tmp_file)
-              res = "<STATUS>allow</STATUS><CERT>#{pri}</CERT>"
-            end
-            `sudo /phased_layer_tunnel/bin/update_cert.sh #{current_user.email} #{tmp_file}.pub`
+          if params.has_key?(:windows) then
+            `puttygen #{tmp_file} -o #{tmp_file}.ppk`
+            win_private = File.read("#{tmp_file}.ppk")
+            res = "<STATUS>allow</STATUS><CERT>#{win_private}</CERT>"
           else
-            res = "<STATUS>deny</STATUS><CERT>-1</CERT>"
+            #pub = File.read("#{tmp_file}.pub")
+            pri = File.read(tmp_file)
+            res = "<STATUS>allow</STATUS><CERT>#{pri}</CERT>"
           end
-        else
-          res = "<STATUS>deny</STATUS><CERT>-1</CERT>"
+          `sudo /phased_layer_tunnel/bin/update_cert.sh #{current_user.email} #{tmp_file}.pub`
         end
         res
       end
-
     end
   end
   register Cert

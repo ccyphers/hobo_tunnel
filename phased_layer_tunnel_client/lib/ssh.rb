@@ -3,39 +3,40 @@ require 'net/ssh'
 module SSH
   class Tunnel
     def initialize(params={})
+      puts params.inspect
       params[:type] ||= 'local'
+      params[:tunnel_pairs] ||= []
       @host = params[:host]
       @user = params[:user]
       @options = params[:options]
       @ssh = Net::SSH.start(@host, @user, @options)
       @gw_thread = nil
-      @type = params[:type]
-      if (Constants::TUNNEL_TYPES - ['shared_screen']).include?(@type)
-        @sport = params[:sport]
-        @dport = params[:dport]
-      elsif @type == 'shared_screen'
-        @session_title = params[:session_title]
-      end
+      @tunnel_pairs = params[:tunnel_pairs]
     end
     
     def start
-      begin
-        if @type == 'local'
-          @ssh.forward.local(@sport.to_i, '127.0.0.1', @dport.to_i)
-          @ssh.loop { true }
-        elsif @type == 'remote'
-          @ssh.forward.remote(@dport.to_i, '127.0.0.1', @sport.to_i)
-          @ssh.loop { true }
+      #puts @tunnel_pairs.inspect
+      @tunnel_pairs.each { |pair|
+        begin
+          if pair['tunnel_type'] == 0
+            @ssh.forward.local(pair['sport'].to_i, '127.0.0.1', pair['dport'].to_i)
+          elsif pair['tunnel_type'] == 1
+            @ssh.forward.remote(pair['sport'].to_i, '127.0.0.1', pair['dport'].to_i)
+          end
+        rescue => e
+          puts "Error detected in tunnel: retrying: #{e.inspect}"
+=begin
+          if @type == 'local'
+            @ssh.forward.cancel_local(@sport.to_i)
+          elsif @type == 'remote'
+            @ssh.forward.cancel_remote(@sport.to_i)
+          end
+=end
+          sleep 2
+          retry
         end
-      rescue => e
-        puts "Error detected in tunnel: retrying"
-        if @type == 'local'
-          @ssh.forward.cancel_local(@sport.to_i)
-        elsif @type == 'remote'
-          @ssh.forward.cancel_remote(@sport.to_i)
-        end
-        retry
-      end
+      }
+      @ssh.loop { true }
     end
 
     def stop

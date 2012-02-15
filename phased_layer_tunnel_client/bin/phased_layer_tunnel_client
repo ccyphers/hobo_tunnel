@@ -5,13 +5,15 @@ base = File.expand_path(File.dirname(__FILE__) + '/..')
 require base + '/lib/phased_layer_tunnel_client'
 module Init
   def self.run
-    opts = GetoptLong.new( ['--user', '-a', GetoptLong::REQUIRED_ARGUMENT ],
-                          ['--tunnel_type', '-b', GetoptLong::REQUIRED_ARGUMENT ], 
-                          ['--source_port', '-c', GetoptLong::REQUIRED_ARGUMENT ], 
-                          ['--dest_port', '-d', GetoptLong::REQUIRED_ARGUMENT ], 
-                          ['--base_url', '-l', GetoptLong::REQUIRED_ARGUMENT ]
+    opts = GetoptLong.new( ['--user', '-u', GetoptLong::REQUIRED_ARGUMENT ],
+                          #['--tunnel_type', '-t', GetoptLong::REQUIRED_ARGUMENT ], 
+                          #['--source_port', '-s', GetoptLong::REQUIRED_ARGUMENT ], 
+                          #['--dest_port', '-d', GetoptLong::REQUIRED_ARGUMENT ], 
+                          ['--base_url', '-b', GetoptLong::REQUIRED_ARGUMENT ]
+                          #['--auto', '-a', GetoptLong::REQUIRED_ARGUMENT ]
                          )
     pass = nil
+    auto = nil
     user = nil
     base_url = nil
     tunnel_type = nil
@@ -30,13 +32,21 @@ module Init
         sport = arg
       elsif opt == '--dest_port'
         dport = arg
+      elsif opt == '--auto'
+        auto = arg
       end
     end
 
-    if pass && user && base_url && tunnel_type && sport && dport
+    #raise ArgumentError if auto && sport
+    #raise ArgumentError if auto && dport
+
+    #if pass && user && base_url && tunnel_type && sport && dport
+    if pass && user && base_url
       i = PhasedLayerTunnelClient.new(:user => user, :pass => pass, 
-                                      :base_url => base_url, :tunnel_type => tunnel_type, 
-                                      :sport => sport, :dport => dport)
+                                      :base_url => base_url, :auto => true)
+      #i = PhasedLayerTunnelClient.new(:user => user, :pass => pass, 
+      #                                :base_url => base_url, :tunnel_type => tunnel_type, 
+      #                                :sport => sport, :dport => dport)
       i.create_tunnel
     end
   end
