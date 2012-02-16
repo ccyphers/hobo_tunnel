@@ -6,6 +6,14 @@ module Sinatra
         env['warden'].user
       end
 
+      def require_api_key(token)
+        valid = false
+        if current_user
+          valid = current_user.single_access_token == token ? true : false
+        end
+        redirect '/login' unless valid
+      end
+
       def require_user
         unless current_user
           env['rack.session']['redirect']=request.path
@@ -25,6 +33,11 @@ module Sinatra
     def self.registered(app)
       app.helpers Auth::Helpers
 
+      app.get '/api_key' do
+        require_user
+        current_user.single_access_token
+      end
+
       app.get '/login/?' do
         erb :login
       end
@@ -42,6 +55,10 @@ module Sinatra
       end
 
       app.get '/logout/?' do
+        if current_user
+          current_user.single_access_token = nil
+          current_user.save
+        end
         env['warden'].logout
         redirect '/'
       end

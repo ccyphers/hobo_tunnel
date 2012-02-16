@@ -25,7 +25,7 @@ class PhasedLayerTunnelClient < PhasedLayerTunnelAgent::Login
   def private_cert
     res = {:status => false, :cert => nil}
     if sanity
-      @@agent.url="#{@base_url}/cert"
+      @@agent.url="#{@base_url}/cert?api_key=#{@@api_key}"
       @@agent.http_get
       t = @@agent.body_str
       res[:status] = t.scan(/<STATUS>(.*)<\/STATUS>/).pp == 'allow' ? true : false

@@ -1,5 +1,3 @@
-require 'sinatra/base'
-
 module Sinatra
   module Cert
     module Helpers
@@ -22,7 +20,9 @@ module Sinatra
       end
 
       app.get '/cert' do
-        require_user
+        params['api_key'] ||= ''
+        require_api_key(params['api_key'])
+        #require_user
         ssh_type = { 'local' => 0, 'remote' => 1}
         res = "<STATUS>deny</STATUS><CERT>-1</CERT>"
         params['conn_type'] ||= 'local'

@@ -6,4 +6,4 @@ gem 'curb'
 gem 'rspec'
 gem 'highline'
 gem 'net-ssh'
-
+gem 'process_control'

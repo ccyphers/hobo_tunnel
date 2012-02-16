@@ -12,8 +12,13 @@ module PhasedLayerTunnelAgent
       @pass = password
       @base_url=base_url
     end
+    def self.api_key(key)
+      @@api_key = key
+    end
+
     @@agent = Curl::Easy.new
     @@agent.enable_cookies = true
+    @@api_key = nil
     def login
       if logged_in?
         logged_in = true
@@ -24,6 +29,7 @@ module PhasedLayerTunnelAgent
           @@agent.http_post(Curl::PostField.content('email', @user), Curl::PostField.content('password', @pass))
           logged_in = logged_in?
           raise StandardError  unless logged_in
+        api_key if logged_in
         rescue => e
           retry_ct +=1
           retry if retry_ct <= MAX_HTTP_RETRIES
@@ -35,6 +41,12 @@ module PhasedLayerTunnelAgent
         end
       end
       logged_in
+    end
+
+    def api_key
+      @@agent.url="#{@base_url}/api_key"
+      @@agent.http_get
+      Login.api_key(@@agent.body_str)
     end
 
     def logged_in?

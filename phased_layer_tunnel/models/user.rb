@@ -14,7 +14,4 @@ class User < ActiveRecord::Base
   def validate
   end
   
-  def self.authenticate(email, password)
-    true
-  end
 end
