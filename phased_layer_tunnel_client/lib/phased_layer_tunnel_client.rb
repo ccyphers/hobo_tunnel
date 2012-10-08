@@ -30,6 +30,7 @@ class PhasedLayerTunnelClient < PhasedLayerTunnelAgent::Login
       t = @@agent.body_str
       res[:status] = t.scan(/<STATUS>(.*)<\/STATUS>/).pp == 'allow' ? true : false
       res[:cert] = t.scan(/<CERT>(.*)<\/CERT>/m).pp
+      puts res
     end
     res
   end

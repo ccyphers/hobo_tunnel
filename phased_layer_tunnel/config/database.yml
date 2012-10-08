@@ -1,8 +1,6 @@
 ---
 development:
-  adapter: mysql
-  database: vpn_development
-  host: localhost
-  username: root
-  password:
-  socket: /var/run/mysqld/mysqld.sock
+  adapter: postgresql
+  database: poor_man_vpn_development
+  pool: 5
+  timeout: 5000

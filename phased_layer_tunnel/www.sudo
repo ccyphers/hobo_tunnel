@@ -1,3 +1,2 @@
-www-data        ALL = NOPASSWD: /phased_layer_tunnel/bin/useradd,/phased_layer_tunnel/bin/update_cert.sh,/phased_layer_tunnel/bin/rm_certs.rb,/phased_layer_tunnel/bin/start_purge_agent.sh
-
+sshd        ALL = NOPASSWD: /phased_layer_tunnel/bin/useradd,/phased_layer_tunnel/bin/update_cert.sh,/phased_layer_tunnel/bin/update_cert_perms.sh,/phased_layer_tunnel/bin/start_sshd,/mnt/home_ext/l_bkup/svn/co/cyberconnect/cyberfied/phased_layer_tunnel/setup.rb
 

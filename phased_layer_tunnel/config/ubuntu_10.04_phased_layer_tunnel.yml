@@ -5,11 +5,9 @@
 
 
 :copy_items:
-- /usr/bin/tail
-- /usr/bin/awk
-- /bin/mkdir
-- /bin/cat
 - /bin/chmod
-- /lib/i386-linux-gnu/libselinux.so.1
-:users:
-- www-data
+- /bin/chown
+- /bin/true
+:depends_on:
+- <update path for where you have phased_layer_tunnel>/config/ubuntu_10.04_sshd.yaml
+

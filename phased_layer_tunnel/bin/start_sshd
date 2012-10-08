@@ -1,0 +1,2 @@
+PHASED_LAYER_CHROOT=/phased_layer_tunnel
+chroot $PHASED_LAYER_CHROOT /usr/sbin/sshd

@@ -6,9 +6,9 @@ require base + '/lib/phased_layer_tunnel_client'
 module Init
   def self.run
     opts = GetoptLong.new( ['--user', '-u', GetoptLong::REQUIRED_ARGUMENT ],
-                          #['--tunnel_type', '-t', GetoptLong::REQUIRED_ARGUMENT ], 
-                          #['--source_port', '-s', GetoptLong::REQUIRED_ARGUMENT ], 
-                          #['--dest_port', '-d', GetoptLong::REQUIRED_ARGUMENT ], 
+                          ['--tunnel_type', '-t', GetoptLong::REQUIRED_ARGUMENT ], 
+                          ['--source_port', '-s', GetoptLong::REQUIRED_ARGUMENT ], 
+                          ['--dest_port', '-d', GetoptLong::REQUIRED_ARGUMENT ], 
                           ['--base_url', '-b', GetoptLong::REQUIRED_ARGUMENT ]
                           #['--auto', '-a', GetoptLong::REQUIRED_ARGUMENT ]
                          )

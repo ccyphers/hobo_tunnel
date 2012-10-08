@@ -7,10 +7,15 @@ MAX_HTTP_RETRIES=4
 module PhasedLayerTunnelAgent
 
   class Login
-    def initialize(base_url, user, password)
-      @user = user
-      @pass = password
-      @base_url=base_url
+    def initialize(params={})
+      params[:user] ||= ''
+      params[:password] ||= ''
+      params[:base_url] ||= ''
+      params[:api_key] ||= ''
+      @@api_key = params[:api_key]
+      @user = params[:user]
+      @pass = params[:password]
+      @base_url = params[:base_url]
     end
     def self.api_key(key)
       @@api_key = key
@@ -19,6 +24,7 @@ module PhasedLayerTunnelAgent
     @@agent = Curl::Easy.new
     @@agent.enable_cookies = true
     @@api_key = nil
+   
     def login
       if logged_in?
         logged_in = true

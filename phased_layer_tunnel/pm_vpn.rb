@@ -1,6 +1,8 @@
+
 class PoorMansVPN < Sinatra::Base
   register Sinatra::Auth
   register Sinatra::Cert
+#  register Sinatra::Limits
 
   configure do
     set(:chdir, BASE)

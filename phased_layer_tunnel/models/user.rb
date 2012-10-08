@@ -1,4 +1,7 @@
 class User < ActiveRecord::Base
+  Encoding.default_internal='ASCII-8BIT'
+  Encoding.default_external='ASCII-8BIT'
+
   has_many :limits
   def env_save
     self.password_salt = Token.provide

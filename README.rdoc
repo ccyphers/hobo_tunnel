@@ -1,23 +1,16 @@
 == DESCRIPTION:
 
-Hobo Tunnel is set out to provide a secue and easy menas to secure up infrastrucures via
-ssh tunnel management.  Why consider such a project, when there are numerous ssh tunnel managers out there?  First and foremost, all aspects of the project run within a chroot envrionment with ease.  Secondly, a pure ruby client authenticates over http to receive a private key 
-which is used to create the ssh connection and the public key at the server side is deleted, so that other user's can't use the private key to ssh in.  As of now I haven't added the configuration for nginx, but the http aspects will be secured via ssl in the near future.
-
-In the near future additional web interface controls will be added so that from a centralized console you can start, and stop ssh tunnels running over as many clients installed.
-
+Hobo Tunnel is set out to provide a secure and easy means to manage ssh tunnels.  Why consider such a project, when there are numerous ssh tunnel managers out there?  With this solution the ssh daemon runs inside of a chroot jail as the ssh user, reducing the need to privlege separation and the sshd builtin chroot capabilities.  This allows one to add a user to the jail that's not a system user for better management. 
 
 == REQUIREMENTS:
 
 * containerize_me
-* ruby193
+* jailkit
+* ruby 1.9.3
+* Linux distro.  Tweaking may be required for the containerize_me templates for setting up sshd inside the chroot jail.  By default the templates for Ubuntu 10.04 work out of the box.
 
 == INSTALL:
-* cd /path/to/containerize_me
-* ./bin/containerize_me --config templates/ubuntu_sinatra_stack.yaml --jail /jail
-* ./bin/containerize_me --config /path/to/phased_layer_tunnel/jail.yaml --jail /jail
-* cp -R /path/to/phased_layer_tunnel /jail
-* chown -R www-data /jail/phased_layer_tunnel
+FIXME
 
 Additional setup and startup items will be added.
 

@@ -3,10 +3,10 @@
 USER_=$1
 last_user=`tail -1 /etc/passwd | awk -F":" '{print $3}'`
 last_group=`tail -1 /etc/passwd | awk -F":" '{print $4}'`
+jail=/phased_layer_tunnel
 let last_user=$last_user+3001
 let last_group=$last_group+3001
-echo "$USER_:x:$last_user:$last_group::/home/$USER_:/bin/bash" >> /etc/passwd
-echo "$USER_:x:$last_group:" >> /etc/group
+echo "$USER_:x:$last_user:$last_group::/home/$USER_:/bin/true" >> $jail/etc/passwd
+echo "$USER_:x:$last_group:" >> $jail/etc/group
 #echo "$USER_:*:14929:0:99999:7:::" >> /etc/shadow
-mkdir -p /home/$USER_
-chown $USER_ /home/$USER_
+mkdir -p $jail/home/$USER_

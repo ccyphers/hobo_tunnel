@@ -1,0 +1,49 @@
+# Authod: Cliff Cyphers
+# Published as part of the cyberconnect's platform mainly used
+# in hosting rails applications.  
+# Licesnse: GPLv3: http://www.gnu.org/licenses/gpl.html
+
+
+:copy_items:
+- /usr/sbin/sshd
+- /etc/ssh
+- /bin/sh
+- /bin/bash
+- /usr/bin/ssh-keygen
+- /usr/lib/libcurses.so
+- /usr/lib/libdl.so
+- /lib/libwrap.so.0
+- /lib/libpam.so.0
+- /lib/libselinux.so.1
+- /lib/libutil.so.1
+- /usr/lib/libgssapi_krb5.so.2
+- /usr/lib/libkrb5.so.3
+- /usr/lib/libk5crypto.so.3
+- /usr/lib/libkrb5support.so.0
+- /lib/libkeyutils.so.1
+- /lib/libresolv.so.2
+- /usr/bin/tail
+- /usr/bin/awk
+- /bin/mkdir
+- /bin/chown
+#- /usr/lib/i386-linux-gnu/libgssapi_krb5.so.2
+#- /usr/lib/i386-linux-gnu/libkrb5.so.3
+#- /usr/lib/i386-linux-gnu/libk5crypto.so.3
+#- /usr/lib/i386-linux-gnu/libkrb5support.so.0
+#- /lib/i386-linux-gnu/libkeyutils.so.1
+
+:symlinks:
+-
+  :source: /usr/lib/libcurses.so
+  :destination: /usr/lib/libcurses.so.5
+  :force: true
+:users:
+- sshd
+:groups:
+- ssh
+:mkdir:
+- :item: /var/run/sshd
+  :user: root
+  :group: root
+  :mode: 0750
+
