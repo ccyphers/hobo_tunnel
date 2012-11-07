@@ -1,0 +1,11 @@
+---
+development:
+  adapter: postgresql
+  database: poor_man_vpn_development
+  pool: 5
+  timeout: 5000
+test:
+  adapter: postgresql
+  database: poor_man_vpn_test
+  pool: 5
+  timeout: 5000

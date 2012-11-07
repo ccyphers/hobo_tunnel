@@ -1,0 +1,53 @@
+// Require.js allows us to configure shortcut alias
+// Their usage will become more apparent futher along in the tutorial.
+require.config({
+  paths: {
+    jquery: 'libs/jquery/jquery-min',
+    underscore: 'libs/underscore/underscore-min',
+    backbone: 'libs/backbone/backbone-optamd3-min',
+    text: 'libs/require/text',
+    templates: '/../templates'
+  }
+
+});
+
+require([
+
+  // Load our app module and pass it to our definition function
+  'app'
+
+  // Some plugins have to be loaded in order due to their non AMD compliance
+  // Because these scripts are not "modules" they do not pass any values to the definition function below
+], function(App){
+    App.initialize();
+
+    // Default to users view.  It would be good and add a feature which
+    // preserve's the state if the user refreses the browser; they would expect
+    // to refresh the data for which the tab they are currently on when refreshing.
+    window.location.href='#users'
+     $( "#sortable1, #sortable2" ).sortable();
+     //$( "#sortable1, #sortable2" ).sortable().disableSelection();
+     var $tabs = $( "#tabs" ).tabs({
+       beforeActivate: function(event, ui) {
+         window.location.href='#' + ui.newTab.find('a')[0].innerText.toLowerCase();
+       }
+     });
+     var $tab_items = $( "ul:first li", $tabs ).droppable({
+         accept: ".connectedSortable li",
+         hoverClass: "ui-state-hover",
+         drop: function( event, ui ) {
+           console.log(ui);
+                 var $item = $( this );
+                 var $list = $( $item.find( "a" ).attr( "href" ) )
+                 .find( ".connectedSortable" );
+                 ui.draggable.hide( "slow", function() {
+     //              $tabs.tabs( "select", $tab_items.index( $item ) );
+                   $( this ).appendTo( $list ).show( "slow" );
+                 ui.draggable.show();
+               });
+               }
+     });
+
+
+
+});
