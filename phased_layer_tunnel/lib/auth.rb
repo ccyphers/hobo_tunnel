@@ -28,6 +28,7 @@ module Sinatra
           return false
         end
       end
+
     end
 
     def self.registered(app)
@@ -36,6 +37,11 @@ module Sinatra
       app.get '/api_key' do
         require_user
         current_user.single_access_token
+      end
+
+      app.get '/valid_key' do
+        require_api_key
+        true
       end
 
       app.get '/login/?' do

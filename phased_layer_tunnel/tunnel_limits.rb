@@ -46,6 +46,7 @@ class TunnelLimits < Sinatra::Base
       end
 
     rescue => e
+        puts "EEE: #{e.inspect}"
     end
   end
 

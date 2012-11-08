@@ -7,23 +7,24 @@ MAX_HTTP_RETRIES=4
 module PhasedLayerTunnelAgent
 
   class Login
+    attr_accessor :agent, :api_key
     def initialize(params={})
       params[:user] ||= ''
       params[:password] ||= ''
       params[:base_url] ||= ''
       params[:api_key] ||= ''
-      @@api_key = params[:api_key]
+      @api_key = params[:api_key]
       @user = params[:user]
       @pass = params[:password]
       @base_url = params[:base_url]
-    end
-    def self.api_key(key)
-      @@api_key = key
+      @agent = Curl::Easy.new
+      @agent.enable_cookies = true
+      @api_key = nil
     end
 
-    @@agent = Curl::Easy.new
-    @@agent.enable_cookies = true
-    @@api_key = nil
+    def self.api_key(key)
+      @api_key = key
+    end
    
     def login
       if logged_in?
@@ -31,8 +32,8 @@ module PhasedLayerTunnelAgent
       else
         retry_ct = 0
         begin
-          @@agent.url="#{@base_url}/login"
-          @@agent.http_post(Curl::PostField.content('email', @user), Curl::PostField.content('password', @pass))
+          @agent.url="#{@base_url}/login"
+          @agent.http_post(Curl::PostField.content('email', @user), Curl::PostField.content('password', @pass))
           logged_in = logged_in?
           raise StandardError  unless logged_in
         api_key if logged_in
@@ -50,16 +51,16 @@ module PhasedLayerTunnelAgent
     end
 
     def api_key
-      @@agent.url="#{@base_url}/api_key"
-      @@agent.http_get
-      Login.api_key(@@agent.body_str)
+      @agent.url="#{@base_url}/api_key"
+      @agent.http_get
+      Login.api_key(@agent.body_str)
     end
 
     def logged_in?
       begin
-        @@agent.url="#{@base_url}/logged_in?"
-        @@agent.http_get
-        res = @@agent.body_str.to_bool
+        @agent.url="#{@base_url}/logged_in?"
+        @agent.http_get
+        res = @agent.body_str.to_bool
       rescue => e
         p e.inspect
         res = false

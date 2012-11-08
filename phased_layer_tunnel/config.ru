@@ -1,5 +1,5 @@
-Encoding.default_internal='ASCII-8BIT'
-Encoding.default_external='ASCII-8BIT'
+Encoding.default_internal='UTF-8'
+Encoding.default_external='UTF-8'
 require 'rubygems'
 #require 'bundler/setup'
 require 'rake'

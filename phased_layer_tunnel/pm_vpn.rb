@@ -2,6 +2,7 @@
 class PoorMansVPN < Sinatra::Base
   register Sinatra::Auth
   register Sinatra::Cert
+  register Sinatra::AdminPage
 #  register Sinatra::Limits
 
   configure do

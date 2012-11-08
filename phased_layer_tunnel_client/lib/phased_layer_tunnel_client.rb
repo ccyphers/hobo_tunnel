@@ -10,6 +10,7 @@ require base + '/login'
 class PhasedLayerTunnelClient < PhasedLayerTunnelAgent::Login
   VERSION = '0.1.0'
   def initialize(params={})
+    super(params)
     params[:sport] ||= 0
     params[:dport] ||= 0
     params[:auto] ||= nil
@@ -25,9 +26,9 @@ class PhasedLayerTunnelClient < PhasedLayerTunnelAgent::Login
   def private_cert
     res = {:status => false, :cert => nil}
     if sanity
-      @@agent.url="#{@base_url}/cert?api_key=#{@@api_key}"
-      @@agent.http_get
-      t = @@agent.body_str
+      @agent.url="#{@base_url}/cert?api_key=#{@api_key}"
+      @agent.http_get
+      t = @agent.body_str
       res[:status] = t.scan(/<STATUS>(.*)<\/STATUS>/).pp == 'allow' ? true : false
       res[:cert] = t.scan(/<CERT>(.*)<\/CERT>/m).pp
       puts res
@@ -37,9 +38,9 @@ class PhasedLayerTunnelClient < PhasedLayerTunnelAgent::Login
 
   def get_tunnel_pairs
     if sanity
-      @@agent.url="#{@base_url}/tunnel_pairs"
-      @@agent.http_get
-      @tunnel_pairs = JSON.parse(@@agent.body_str)
+      @agent.url="#{@base_url}/tunnel_pairs"
+      @agent.http_get
+      @tunnel_pairs = JSON.parse(@agent.body_str)
     end
   end
 

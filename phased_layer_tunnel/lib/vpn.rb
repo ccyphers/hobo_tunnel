@@ -1,3 +1,5 @@
+require 'sinatra/base'
+
 module Sinatra
   module Cert
     module Helpers
@@ -20,33 +22,46 @@ module Sinatra
       end
 
       app.get '/cert' do
-        params['api_key'] ||= ''
-        require_api_key(params['api_key'])
-        #require_user
+        require_user
         ssh_type = { 'local' => 0, 'remote' => 1}
         res = "<STATUS>deny</STATUS><CERT>-1</CERT>"
         params['conn_type'] ||= 'local'
         params['conn_port'] ||= '5900'
-        tmp_file = "/tmp/#{current_user.email}_#{Token.provide}"
-        if current_user.limits.length > 0
+
+        if params['conn_type'] != '' && params['conn_port'] != ''
           begin
-            `ssh-keygen -q -t rsa -b 2048 -N '' -f #{tmp_file}`
+            limit = current_user.limits.first
           rescue => e
-            logger.warn("keygen error: #{e.inspect}")
+            limit = nil
           end
-          if params.has_key?(:windows) then
-            `puttygen #{tmp_file} -o #{tmp_file}.ppk`
-            win_private = File.read("#{tmp_file}.ppk")
-            res = "<STATUS>allow</STATUS><CERT>#{win_private}</CERT>"
+
+          if limit
+            tmp_file = "/tmp/#{current_user.email}_#{Token.provide}"
+            begin
+              `ssh-keygen -q -t rsa -b 2048 -N '' -f #{tmp_file}`
+            rescue => e
+              logger.warn("keygen error: #{e.inspect}")
+            end
+            if params.has_key?(:windows) then
+              `puttygen #{tmp_file} -o #{tmp_file}.ppk`
+              win_private = File.read("#{tmp_file}.ppk")
+              res = "<STATUS>allow</STATUS><CERT>#{win_private}</CERT>"
+            else
+              #pub = File.read("#{tmp_file}.pub")
+              pri = File.read(tmp_file)
+              res = "<STATUS>allow</STATUS><CERT>#{pri}</CERT>"
+            end
+            `sudo #{ENV['PHASED_LAYER_CHROOT']}/bin/update_cert.sh #{current_user.email} #{tmp_file}.pub`
+            `sudo #{ENV['PHASED_LAYER_CHROOT']}/bin/update_cert_perms.sh #{current_user.email}`
           else
-            #pub = File.read("#{tmp_file}.pub")
-            pri = File.read(tmp_file)
-            res = "<STATUS>allow</STATUS><CERT>#{pri}</CERT>"
+            res = "<STATUS>deny</STATUS><CERT>-1</CERT>"
           end
-          `sudo /phased_layer_tunnel/bin/update_cert.sh #{current_user.email} #{tmp_file}.pub`
+        else
+          res = "<STATUS>deny</STATUS><CERT>-1</CERT>"
         end
         res
       end
+
     end
   end
   register Cert
