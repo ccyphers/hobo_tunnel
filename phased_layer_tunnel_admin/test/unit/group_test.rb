@@ -4,7 +4,7 @@ class GroupTest < ActiveSupport::TestCase
   test "group must have a valid name" do
     g = Group.new
     assert !g.valid?
-    assert_equal "name has already been taken", g.errors.first.join(' ')
+    assert_equal "name can't be blank", g.errors.first.join(' ')
     g.name='blah'
     assert g.valid?
   end
