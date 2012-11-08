@@ -20,7 +20,6 @@ class UserTest < ActiveSupport::TestCase
 
   test "two users can not have the same email address" do
     u = User.create(:email => 'blah@blah.com')
-    puts "BLAH: #{u.errors.first.inspect}"
     assert u.errors.empty?
     u2 = User.create(:email => 'blah@blah.com')
     assert !u2.errors.empty?
