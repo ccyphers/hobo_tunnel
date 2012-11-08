@@ -3,8 +3,11 @@ class User < ActiveRecord::Base
   has_many :groups, :through => :user_groups
   has_many :user_limits
   has_many :limits, :through => :user_limits
+
+  # FIXME - add socket connection to mail server and query for user
+  # for proper validation
   validates :email, :uniqueness => true, :presence => true,
-            :format => { :with => %r(^[a-zA-Z.,]*@[\d\c]*\[.com|.org|.biz]$),
+            :format => { :with => %r(\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*),
                          :message => "please provide a valid email format."}
   before_destroy :group_references
 
