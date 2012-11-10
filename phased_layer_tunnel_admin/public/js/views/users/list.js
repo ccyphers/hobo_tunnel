@@ -37,18 +37,25 @@ define([
     render: function(){
       list_view = this;
       Users.fetch({
-        success: function(users) {
+        success: function(res) {
           list_view.el.empty();
-          for(i in users.models) {
-            data = {name: users.models[i].attributes.email}
+          users = res.models[0].name.users
+          groups = res.models[0].name.groups
+          //groups = res.models[0].name.groups
+          group_map = res.models[0].name.group_map
+          for(i in users) {
+            data = {name: users[i]}
             var compiledTemplate = _.template( userListTemplate, data );
             list_view.el.append( compiledTemplate );
           }
+          users_perspective_view.render(group_map);
+          /*
           Groups.fetch({ 
             success: function(groups) {
               users_perspective_view.render({users: users, groups: groups});
             }
           });
+          */
           multi_d_and_d();
           setup_delete_users();
         }

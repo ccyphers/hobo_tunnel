@@ -7,7 +7,8 @@ define([
 ], function($, _, Backbone, user){
   var user_collection = Backbone.Collection.extend({
     model: user,
-    url: '/user/list',
+    url: '/user/users_perspective',
+    //url: '/user/list',
 //    localStorage: new store("users"),
 /*
     done: function() {
