@@ -1,9 +1,15 @@
 class UserController < ApplicationController
+  caches_action :list
+  def users_perspective
+    render :json => User.users_and_groups_map
+  end
+
   def list
-    render :json => User.all.map { |i| {:email => i.email, :groups => i.groups} }.to_json
+    render :json => User.all.map { |i| {:email => i.email } }.to_json
   end
 
   def new
+    expire_action :action => :list
     res = {:results => false, :errors => []}
     params[:email] ||= 0
     begin
@@ -51,6 +57,7 @@ class UserController < ApplicationController
       }
       if ug.save
         res[:results] = true
+        expire_action :action => :list
       else
         res[:errors] = ug.errors
       end
@@ -70,6 +77,7 @@ class UserController < ApplicationController
       ug = UserGroup.find(:first, :conditions => 
                           {:user_id => user_id, :group_id => group_id})
       ug.delete
+      expire_action :action => :list
       res[:results] = true
     rescue => e
     end
@@ -83,6 +91,7 @@ class UserController < ApplicationController
       user = User.delete_by_email(params[:email])
       if user.errors.empty?
         res[:results] = true
+        expire_action :action => :list
       else
         res[:errors] << user.errors.first.inspect
       end
